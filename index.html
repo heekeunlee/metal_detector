@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Metal Detector Guide | 고등학생 실험 가이드</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <h1 id="main-title">금속 탐지기 제작 가이드</h1>
+            <p class="subtitle">전자기 유도 원리를 이용한 DIY 물리 실험</p>
+        </header>
+
+        <!-- Hero Section / Intro Card -->
+        <div class="card intro-card">
+            <img src="KakaoTalk_Photo_2026-03-19-13-06-49.jpeg" alt="Metal Detector Photo" class="step-img" id="hero-img">
+            <p><strong>아두이노 나노</strong>를 사용하여 금속에 본 반응 실험기를 직접 만들어 보세요. 이 앱은 단계별 조립 과정을 한눈에 안내합니다.</p>
+            <button class="btn-primary" onclick="startGuide()">실험 시작하기</button>
+        </div>
+
+        <!-- 1. Component Checklist -->
+        <div class="card" id="section-components">
+            <h2>📦 준비물 체크리스트</h2>
+            <div class="components-grid">
+                <div class="comp-item"><span class="comp-icon">🧠</span>아두이노 나노</div>
+                <div class="comp-item"><span class="comp-icon">🌀</span>구리 코일</div>
+                <div class="comp-item"><span class="comp-icon">🔋</span>전해 콘덴서</div>
+                <div class="comp-item"><span class="comp-icon">🖥️</span>OLED (I2C)</div>
+                <div class="comp-item"><span class="comp-icon">🏗️</span>브레드보드</div>
+                <div class="comp-item"><span class="comp-icon">🔌</span>점퍼선</div>
+            </div>
+        </div>
+
+        <!-- 2. Step-by-Step Guide -->
+        <div class="card" id="guide-app" style="display:none;">
+            <div class="step-container">
+                <!-- Step 1 -->
+                <div class="step-slide active" id="step-1">
+                    <span class="step-number">1</span>
+                    <h3 class="step-title">OLED 모니터 연결하기</h3>
+                    <p>화면을 통해 센서 값을 실시간으로 확인해야 합니다. I2C 핀을 정확히 연결하세요.</p>
+                    <pre>
+- VCC → 5V
+- GND → GND
+- SCL → A5
+- SDA → A4</pre>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-slide" id="step-2">
+                    <span class="step-number">2</span>
+                    <h3 class="step-title">코일과 콘덴서 회로</h3>
+                    <p>가장 중요한 센서 부분입니다. <strong>A0 핀</strong>에 병렬로 연결합니다.</p>
+                    <pre>
+- 콘덴서 (+) → A0
+- 콘덴서 (-) → GND
+- 코일 (무극성) → A0, GND 사이 연결</pre>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-slide" id="step-3">
+                    <span class="step-number">3</span>
+                    <h3 class="step-title">코드 업로드 (Coding)</h3>
+                    <p>아래 코드를 아두이노 IDE에 복사하여 업로드하세요. 방전 시간을 초단위로 측정합니다.</p>
+                    <button class="btn-primary" onclick="copyCode()">코드 복사하기</button>
+                    <pre id="arduino-code">
+long pulse() {
+  pinMode(A0, OUTPUT);
+  digitalWrite(A0, HIGH);
+  delayMicroseconds(10);
+  pinMode(A0, INPUT);
+  long t = micros();
+  while(analogRead(A0) > 10);
+  return micros() - t;
+}</pre>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="nav-controls">
+                <button class="btn-nav" onclick="prevStep()">이전</button>
+                <button class="btn-nav" onclick="nextStep()" id="btn-next">다음 단계</button>
+            </div>
+        </div>
+
+        <!-- Theory Section -->
+        <div class="card">
+            <h2>💡 과학 원리 (Theory)</h2>
+            <p><strong>와전류(Eddy Current):</strong> 금속이 변하는 자기장 속에 놓이면 금속 내부에 소용돌이 형태의 전류가 발생합니다. 이 전류는 에너지를 소비하며, 우리 센서의 '방전 시간'을 변화시킵니다.</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
